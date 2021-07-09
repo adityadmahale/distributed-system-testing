@@ -1,3 +1,5 @@
+![Flow diagram](images/HA.png)
+
 ### Prerequisites:
 
     1. Install Docker
