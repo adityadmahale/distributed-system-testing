@@ -1,0 +1,17 @@
+FROM basecentos8
+
+ARG DB_TYPE
+ARG DB_VERSION
+ARG REPO_USERNAME
+ARG REPO_PASSWORD
+
+ENV DATABASE_TYPE $DB_TYPE
+ENV DATABASE_VERSION $DB_VERSION
+
+ADD scripts/installation/ /tmp
+ADD scripts/cluster/ /tmp
+
+RUN chmod u+x /tmp/db.sh /tmp/launcher.sh
+RUN /tmp/db.sh centos8 $REPO_USERNAME $REPO_PASSWORD
+
+ENTRYPOINT /tmp/launcher.sh

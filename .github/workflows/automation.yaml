@@ -1,0 +1,26 @@
+name: automation
+
+on: push
+
+jobs:
+  centos:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os-version: [7]
+        db-type: [pg]
+        db-version: [11, 12]
+    steps:
+      - name: Checkout automation repo
+        uses: actions/checkout@v2
+
+      - name: Install python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip3 install -r requirements.txt
+
+      - name: Run the test
+        run: python3 -m pytest . --os_type=centos --os_version=${{ matrix.os-version }} --db_type=${{ matrix.db-type }} --db_version=${{ matrix.db-version }}

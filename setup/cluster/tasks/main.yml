@@ -1,0 +1,35 @@
+---
+# tasks file for cluster
+- name: Start Primary Node
+  community.docker.docker_container:
+    name: "{{ primary }}"
+    state: started
+    image: "{{ image_name }}"
+    tty: yes
+    detach: yes
+    interactive: yes
+    env:
+      NODE: "primarydb"
+      DATABASE_USER: "{{ database_user }}"
+      DATABASE_NAME: "{{ database_name }}"
+      # DB properties
+      MAX_REPLICATION_SLOTS: "{{ max_replication_slots }}"
+      WAL_KEEP_SIZE: "{{ wal_keep_size }}"
+      WAL_KEEP_SEGMENTS: "{{ wal_keep_segments }}"
+      DBPORT: "{{ db_port }}"
+  register: primary_info
+- name: Start Replica Nodes
+  community.docker.docker_container:
+    name: "{{ item }}"
+    state: started
+    image: "{{ image_name }}"
+    tty: yes
+    detach: yes
+    interactive: yes
+    env:
+      NODE: "standbydb"
+      PRIMARY_IP: "{{ primary_info.container.NetworkSettings.IPAddress }}"
+      DATABASE_USER: "{{ database_user }}"
+      DATABASE_NAME: "{{ database_name }}"
+      DBPORT: "{{ db_port }}"
+  loop: "{{ replicas }}"

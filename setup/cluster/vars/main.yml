@@ -1,0 +1,15 @@
+---
+# vars file for cluster
+primary: primary
+replicas:
+  - replica1
+  - replica2
+  - replica3
+image_name: dbepascentos7
+database_user: postgres
+database_name: postgres
+# Primary DB properties
+max_replication_slots: "5"
+wal_keep_size: "8000"
+wal_keep_segments: "500"
+db_port: "5433"

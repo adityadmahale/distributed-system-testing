@@ -1,0 +1,25 @@
+---
+# tasks file for images
+- name: Build base image
+  community.docker.docker_image:
+    build:
+      path: ..
+      dockerfile: "dockerfiles/base/{{ platform }}{{ platform_version }}"
+    source: build
+    name: "base{{ platform }}{{ platform_version }}"
+    state: present
+    force_source: yes
+- name: Build DB image
+  community.docker.docker_image:
+    build:
+      path: ..
+      dockerfile: "dockerfiles/db/{{ platform }}{{ platform_version }}"
+      args:
+        DB_TYPE: "{{ db_type }}"
+        DB_VERSION: "{{ db_version }}"
+        REPO_USERNAME: "{{ repo_username }}"
+        REPO_PASSWORD: "{{ repo_password }}"
+    source: build
+    name: "db{{ db_type }}{{ platform }}{{ platform_version }}"
+    state: present
+    force_source: yes
